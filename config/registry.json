@@ -1,7 +1,16 @@
 {
   "version": "1.0",
-  "generatedAt": "2026-11-11T14:33:30.728Z",
+  "generatedAt": "2026-11-11T14:33:48.931Z",
   "tours": {
+    "desert-golden-hour": {
+      "title": "Desert Golden Hour",
+      "location": "Redstone Valley",
+      "hlookat": -30,
+      "vlookat": 0,
+      "fov": 90,
+      "xml": "https://yasir-rasheed-dev.github.io/panorama-xml-host/xml/tours/desert-golden-hour.xml",
+      "thumbnail": "https://yasir-rasheed-dev.github.io/panorama-xml-host/assets/panoramas/desert-golden-hour/desert-golden-hour.jpg"
+    },
     "alpine-escape": {
       "title": "Alpine Escape",
       "location": "Northern Highlands",
