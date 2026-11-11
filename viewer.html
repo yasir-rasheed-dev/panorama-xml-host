@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>360° Viewer</title>
+<style>*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;font-family:system-ui,sans-serif;background:#122137;color:white}.header{height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:#121f33}.header a{text-decoration:none;color:#c4cdfd;font-size:12px}.header strong{font-size:13px}#pano{width:100%;height:calc(100% - 58px)}#message{position:absolute;inset:58px 0 0;display:none;align-items:center;justify-content:center;padding:24px;text-align:center;color:#e8eeff;background:#17273c}#message div{max-width:480px;line-height:1.7}#message p{font-size:13px;color:#a7b8ce}
+</style></head><body><header class="header"><a href="./">← All tours</a><strong id="title">Panorama Viewer</strong><span>360°</span></header><div id="pano"></div><div id="message"><div><h2 id="error-title">Viewer unavailable</h2><p id="error-body"></p></div></div>
+<style>#pano{position:relative;overflow:hidden;touch-action:none}#pano canvas{display:block;cursor:grab}.preview-status{position:absolute;inset:0;display:grid;place-items:center;padding:24px;background:#17273c}.preview-controls{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);display:flex;gap:8px;white-space:nowrap}.preview-controls button{border:1px solid #64748b;background:#122137dd;color:white;border-radius:8px;padding:10px 12px;cursor:pointer}.preview-controls button:hover{background:#334155}@media(max-width:500px){.preview-controls{gap:4px}.preview-controls button{font-size:11px;padding:9px}}</style>
+<script>
+function showError(title,message){
+  document.getElementById('error-title').textContent=title;
+  document.getElementById('error-body').textContent=message;
+  document.getElementById('message').style.display='flex';
+}
+(async()=>{
+  try{
+    const id=new URLSearchParams(location.search).get('id')||'';
+    if(!/^[a-z0-9-]{2,80}$/.test(id)) throw new Error('Invalid or missing tour ID.');
+    const response=await fetch('./config/registry.json',{cache:'no-store'});
+    if(!response.ok) throw new Error('Tour registry could not be loaded.');
+    const tours=(await response.json()).tours||{};
+    if(!Object.prototype.hasOwnProperty.call(tours,id)) throw new Error('Tour is not in the approved registry.');
+    const tour=tours[id];
+    document.getElementById('title').textContent=tour.title||id;
+    if(new URLSearchParams(location.search).get('engine')==='krpano'){
+      await new Promise((resolve,reject)=>{
+        const script=document.createElement('script');script.src='./viewer/krpano.js';
+        script.onload=()=>typeof window.embedpano==='function'?resolve():reject(new Error('The supplied krpano runtime is invalid.'));
+        script.onerror=()=>reject(new Error('Install your licensed runtime at viewer/krpano.js to use the krpano engine.'));
+        document.head.appendChild(script);
+      });
+    }
+    if(typeof window.embedpano !== 'function'){
+      const {openPanorama}=await import('./viewer/panorama.js');
+      openPanorama(document.getElementById('pano'),tour);return;
+    }
+    const approvedXml = new URL(`./xml/tours/${encodeURIComponent(id)}.xml`,location.href).href;
+    // Enforce same-origin: never accept XML URLs directly from user query parameters.
+    window.embedpano({target:'pano',xml:approvedXml,html5:'only',mobilescale:1.0});
+  }catch(error){showError('Could not open tour',error.message||String(error));}
+})();
+</script></body></html>

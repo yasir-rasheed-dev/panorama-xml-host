@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Panorama Collection</title>
+  <meta name="description" content="Published panoramic tours from Panorama Studio"/>
+  <style>
+    :root{font-family:system-ui,-apple-system,sans-serif;color:#1c2941;background:#f6f8fc}*{box-sizing:border-box}
+    body{margin:0}.top{background:#13243e;padding:24px 7%;display:flex;justify-content:space-between;align-items:center;color:#fff;gap:20px}.logo{font-weight:850;font-size:19px;letter-spacing:-.5px}.logo span{color:#999fff}.top small{color:#99a9c2;font-size:11px}
+    main{max-width:1160px;margin:auto;padding:62px 24px 100px}h1{font-size:clamp(27px,4vw,42px);margin:0 0 12px;letter-spacing:-1px}p{color:#8291a6;font-size:14px;line-height:1.7;margin:0}.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:22px;margin-top:35px}.tile{display:block;background:#fff;border:1px solid #e8edf6;border-radius:15px;overflow:hidden;transition:.2s;color:inherit;text-decoration:none}.tile:hover{transform:translateY(-4px);box-shadow:0 15px 30px #172d5014}.cover{height:175px;background:linear-gradient(125deg,#657fe4,#1b345a);display:grid;place-items:center;color:#fff;font-size:38px}.cover img{width:100%;height:100%;object-fit:cover}.data{padding:20px}.data strong{display:block;font-size:16px}.data span{display:block;margin-top:9px;color:#8d9db1;font-size:12px}.empty{margin-top:35px;background:#fff;border:1px dashed #d8e1ed;padding:55px 25px;border-radius:14px;text-align:center}.empty strong{display:block;margin-bottom:8px}footer{border-top:1px solid #e9edf3;padding:22px;text-align:center;font-size:11px;color:#a7b0bd}
+  </style>
+</head>
+<body><header class="top"><div class="logo">panorama<span>.</span> STUDIO</div><small>Published tour collection</small></header><main><h1>Explore in every direction.</h1><p>360° tours, shared through the Panorama Studio publishing system.</p><div id="gallery" class="gallery"><div class="empty">Loading published tours...</div></div></main><footer>Published from Panorama Studio · Authorized viewers only</footer>
+<script>
+(async()=>{
+  const gallery=document.getElementById('gallery');
+  try{
+    const response=await fetch('./config/registry.json',{cache:'no-store'});
+    if(!response.ok) throw new Error('Registry unavailable');
+    const registry=await response.json();
+    const tours=Object.entries(registry.tours||{});
+    gallery.textContent='';
+    if(!tours.length){gallery.classList.remove('gallery');gallery.innerHTML='<div class="empty"><strong>No tours published yet</strong>Publish a tour from Panorama Studio to populate this collection.</div>';return;}
+    for(const [id,tour] of tours){
+      if(!/^[a-z0-9-]{2,80}$/.test(id)) continue;
+      const a=document.createElement('a');a.className='tile';a.href=`./viewer.html?id=${encodeURIComponent(id)}`;
+      const cover=document.createElement('div');cover.className='cover';
+      if(typeof tour.thumbnail==='string' && tour.thumbnail.startsWith('https://')){
+        const img=document.createElement('img');img.src=tour.thumbnail;img.alt='';img.loading='lazy';cover.appendChild(img);
+      }else cover.textContent='◉';
+      const meta=document.createElement('div');meta.className='data';
+      const name=document.createElement('strong');name.textContent=tour.title||id;
+      const loc=document.createElement('span');loc.textContent=tour.location||'360° Panorama';
+      meta.append(name,loc);a.append(cover,meta);gallery.appendChild(a);
+    }
+  }catch{gallery.textContent='Could not load the tour registry. Check config/registry.json.';}
+})();
+</script></body></html>

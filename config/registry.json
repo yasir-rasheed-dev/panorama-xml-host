@@ -1,0 +1,33 @@
+{
+  "version": "1.0",
+  "generatedAt": "2026-11-11T14:22:32.986Z",
+  "tours": {
+    "alpine-escape": {
+      "title": "Alpine Escape",
+      "location": "Northern Highlands",
+      "hlookat": 40,
+      "vlookat": 0,
+      "fov": 88,
+      "xml": "https://yasir-rasheed-dev.github.io/panorama-xml-host/xml/tours/alpine-escape.xml",
+      "thumbnail": "https://yasir-rasheed-dev.github.io/panorama-xml-host/assets/panoramas/alpine-escape/alpine-escape.jpg"
+    },
+    "coastal-horizon": {
+      "title": "Coastal Horizon",
+      "location": "Azure Coast",
+      "hlookat": 0,
+      "vlookat": 0,
+      "fov": 95,
+      "xml": "https://yasir-rasheed-dev.github.io/panorama-xml-host/xml/tours/coastal-horizon.xml",
+      "thumbnail": "https://yasir-rasheed-dev.github.io/panorama-xml-host/assets/panoramas/coastal-horizon/coastal-horizon.jpg"
+    },
+    "desert-golden-hour": {
+      "title": "Desert Golden Hour",
+      "location": "Redstone Valley",
+      "hlookat": -30,
+      "vlookat": 0,
+      "fov": 90,
+      "xml": "https://yasir-rasheed-dev.github.io/panorama-xml-host/xml/tours/desert-golden-hour.xml",
+      "thumbnail": "https://yasir-rasheed-dev.github.io/panorama-xml-host/assets/panoramas/desert-golden-hour/desert-golden-hour.jpg"
+    }
+  }
+}

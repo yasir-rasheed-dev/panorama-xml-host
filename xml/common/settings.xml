@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<krpano version="1.24">
+  <!-- Shared defaults. Extend only with settings supported by your licensed viewer. -->
+  <autorotate enabled="false" />
+</krpano>
